@@ -1,0 +1,48 @@
+services:
+  shard0:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: orders_shard0
+    ports:
+      - "5436:5432"
+    volumes:
+      - shard0_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  shard1:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: orders_shard1
+    ports:
+      - "5434:5432"
+    volumes:
+      - shard1_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  shard2:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: orders_shard2
+    ports:
+      - "5435:5432"
+    volumes:
+      - shard2_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  # OPTIONAL: fake Google Cloud Storage, only for Plan B if the real bucket is not ready
+  gcs-emulator:
+    image: fsouza/fake-gcs-server
+    command: ["-scheme", "http", "-port", "4443", "-public-host", "localhost:4443"]
+    ports:
+      - "4443:4443"
+
+volumes:
+  shard0_data:
+  shard1_data:
+  shard2_data:
