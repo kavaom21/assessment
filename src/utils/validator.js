@@ -2,7 +2,7 @@ export function validateRow(raw) {
   const order_id = String(raw.order_id ?? '').trim();
   const customer_id = String(raw.customer_id ?? '').trim();
   const status = String(raw.status ?? '').trim();
-  // PDF typo support: accept order_amount and order_amout
+
   const amountRaw = String(raw.order_amount ?? raw.order_amout ?? '').trim();
   const dateRaw = String(raw.order_date ?? '').trim();
 

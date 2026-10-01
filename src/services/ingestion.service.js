@@ -5,9 +5,9 @@ import { validateRow } from '../utils/validator.js';
 import { getShardIndex } from '../db/shardRouter.js';
 import { insertBatch } from '../db/ordersRepository.js';
 
-const MAX_ERRORS_KEPT = 20; // cap memory used by error samples
+const MAX_ERRORS_KEPT = 20; 
 
-// Takes ANY readable stream of CSV bytes. Returns a summary.
+
 export async function ingestCsvStream(readable) {
   const shardCount = config.shardUrls.length;
   const buffers = Array.from({ length: shardCount }, () => []);
@@ -56,7 +56,6 @@ export async function ingestCsvStream(readable) {
     })
   );
 
-  // for await = automatic backpressure: no new row is read while we await the DB
   for await (const raw of parser) {
     summary.parsed++;
     const { value, error } = validateRow(raw);
@@ -71,7 +70,6 @@ export async function ingestCsvStream(readable) {
     }
   }
 
-  // FINAL FLUSH: insert the partially filled buffers
   for (let i = 0; i < shardCount; i++) await flush(i);
 
   return summary;

@@ -6,8 +6,7 @@ const INSERT_SQL = `
   ON CONFLICT (order_id) DO NOTHING
 `;
 
-// Insert one batch into one shard, inside a transaction.
-// Returns how many rows were really inserted (duplicates are skipped).
+
 export async function insertBatch(shardIndex, rows) {
   if (rows.length === 0) return 0;
 
