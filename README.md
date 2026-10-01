@@ -71,6 +71,30 @@ npm start
 
 The `orders` table is created automatically in every shard on the first start of the containers, from `sql/schema.sql`.
 
+# Google ADC configuration
+
+The code only does `new Storage()`. It never receives a key file or a password. The Google library finds credentials by itself using **Application Default Credentials**, in this order:
+
+1. The `GOOGLE_APPLICATION_CREDENTIALS` environment variable (not used here, no key files)
+2. The login created by `gcloud auth application-default login` (local development)
+3. The identity of the machine when running on GCP, for example workload identity (production)
+
+### To use a real bucket
+
+```bash
+gcloud auth application-default login
+gcloud config set project YOUR_PROJECT_ID
+gcloud auth application-default set-quota-project YOUR_PROJECT_ID
+gcloud storage buckets create gs://YOUR_BUCKET_NAME --location=asia-south1
+```
+
+Then in `.env`:
+
+```
+GCP_PROJECT_ID=YOUR_PROJECT_ID
+GCS_BUCKET_NAME=YOUR_BUCKET_NAME
+```
+
 ### Environment variables (`.env.example`)
 
 | Variable | Meaning |
